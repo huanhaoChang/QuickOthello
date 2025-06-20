@@ -44,7 +44,7 @@ fun PlayerScoreBoard(
             containerColor = if (isCurrentPlayer)
                 MaterialTheme.colorScheme.primaryContainer
             else
-                MaterialTheme.colorScheme.surface
+                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
         )
     ) {
         if (isHorizontal) {

@@ -63,7 +63,8 @@ class OthelloGameLogic {
     }
 
     fun isValidMove(game: OthelloGame, row: Int, col: Int, player: Player): Boolean {
-        if (row !in 0..7 || col !in 0..7) return false
+        val size = game.boardSize.size
+        if (row !in 0 until size || col !in 0 until size) return false
         if (game.board[row][col] != CellState.EMPTY) return false
         if (game.gameState != GameState.ONGOING) return false
 
@@ -72,8 +73,9 @@ class OthelloGameLogic {
 
     fun getValidMoves(game: OthelloGame, player: Player): List<Position> {
         val validMoves = mutableListOf<Position>()
-        for (row in 0..7) {
-            for (col in 0..7) {
+        val size = game.boardSize.size
+        for (row in 0 until size) {
+            for (col in 0 until size) {
                 if (isValidMove(game, row, col, player)) {
                     validMoves.add(Position(row, col))
                 }
@@ -86,6 +88,7 @@ class OthelloGameLogic {
         val cellsToFlip = mutableListOf<Position>()
         val playerCell = player.toCellState()
         val opponentCell = player.opposite().toCellState()
+        val size = game.boardSize.size
 
         for (direction in directions) {
             val potentialFlips = mutableListOf<Position>()
@@ -93,7 +96,7 @@ class OthelloGameLogic {
             var currentCol = col + direction.col
 
             // Find opponent's disks in this direction
-            while (currentRow in 0..7 && currentCol in 0..7 &&
+            while (currentRow in 0 until size && currentCol in 0 until size &&
                 game.board[currentRow][currentCol] == opponentCell) {
                 potentialFlips.add(Position(currentRow, currentCol))
                 currentRow += direction.row
@@ -101,7 +104,7 @@ class OthelloGameLogic {
             }
 
             // Check if we found player's disk at the end
-            if (currentRow in 0..7 && currentCol in 0..7 &&
+            if (currentRow in 0 until size && currentCol in 0 until size &&
                 game.board[currentRow][currentCol] == playerCell &&
                 potentialFlips.isNotEmpty()) {
                 cellsToFlip.addAll(potentialFlips)
@@ -112,8 +115,9 @@ class OthelloGameLogic {
     }
 
     private fun hasAnyValidMove(game: OthelloGame, player: Player): Boolean {
-        for (row in 0..7) {
-            for (col in 0..7) {
+        val size = game.boardSize.size
+        for (row in 0 until size) {
+            for (col in 0 until size) {
                 if (isValidMove(game, row, col, player)) {
                     return true
                 }

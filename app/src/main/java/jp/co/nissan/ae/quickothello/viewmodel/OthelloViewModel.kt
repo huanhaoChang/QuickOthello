@@ -40,10 +40,19 @@ class OthelloViewModel : ViewModel() {
         }
     }
 
-    fun resetGame() {
-        Log.d("OthelloViewModel", "Resetting game")
-        _uiState.value = OthelloUiState()
+    fun resetGame(boardSize: BoardSize? = null) {
+        Log.d("OthelloViewModel", "Resetting game with board size: ${boardSize?.displayName() ?: "current"}")
+        val newBoardSize = boardSize ?: _uiState.value.selectedBoardSize
+        _uiState.value = OthelloUiState(
+            game = OthelloGame.createInitialGame(newBoardSize),
+            selectedBoardSize = newBoardSize
+        )
         updateValidMoves()
+    }
+
+    fun updateBoardSize(boardSize: BoardSize) {
+        Log.d("OthelloViewModel", "Updating board size to: ${boardSize.displayName()}")
+        _uiState.value = _uiState.value.copy(selectedBoardSize = boardSize)
     }
 
     fun dismissInvalidMoveMessage() {
@@ -61,5 +70,6 @@ class OthelloViewModel : ViewModel() {
 data class OthelloUiState(
     val game: OthelloGame = OthelloGame.createInitialGame(),
     val validMoves: List<Position> = emptyList(),
-    val showInvalidMoveMessage: Boolean = false
+    val showInvalidMoveMessage: Boolean = false,
+    val selectedBoardSize: BoardSize = BoardSize.EIGHT
 )

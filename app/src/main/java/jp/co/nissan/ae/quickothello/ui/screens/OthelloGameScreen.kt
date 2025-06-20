@@ -22,7 +22,8 @@ fun OthelloGameScreen(
             modifier = modifier,
             uiState = uiState,
             onCellClick = viewModel::onCellClick,
-            onResetGame = viewModel::resetGame,
+            onResetGame = { viewModel.resetGame(uiState.selectedBoardSize) },
+            onBoardSizeSelected = viewModel::updateBoardSize,
             onDismissInvalidMove = viewModel::dismissInvalidMoveMessage
         )
     } else {
@@ -30,7 +31,8 @@ fun OthelloGameScreen(
             modifier = modifier,
             uiState = uiState,
             onCellClick = viewModel::onCellClick,
-            onResetGame = viewModel::resetGame,
+            onResetGame = { viewModel.resetGame(uiState.selectedBoardSize) },
+            onBoardSizeSelected = viewModel::updateBoardSize,
             onDismissInvalidMove = viewModel::dismissInvalidMoveMessage
         )
     }

@@ -31,6 +31,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import jp.co.nissan.ae.quickothello.model.BoardSize
 import jp.co.nissan.ae.quickothello.model.Player
 import jp.co.nissan.ae.quickothello.ui.screens.components.DrawerContent
 import jp.co.nissan.ae.quickothello.ui.screens.components.GameBoard
@@ -45,11 +46,12 @@ fun PortraitLayout(
     uiState: jp.co.nissan.ae.quickothello.viewmodel.OthelloUiState,
     onCellClick: (Int, Int) -> Unit,
     onResetGame: () -> Unit,
+    onBoardSizeSelected: (BoardSize) -> Unit,
     onDismissInvalidMove: () -> Unit
 ) {
     var isDrawerOpen by remember { mutableStateOf(false) }
     val density = LocalDensity.current
-    val drawerWidth = 200.dp
+    val drawerWidth = 250.dp
     val drawerWidthPx = with(density) { drawerWidth.toPx() }
 
     val offsetX by animateFloatAsState(
@@ -163,6 +165,8 @@ fun PortraitLayout(
                 }
         ) {
             DrawerContent(
+                selectedBoardSize = uiState.selectedBoardSize,
+                onBoardSizeSelected = onBoardSizeSelected,
                 onResetGame = {
                     onResetGame()
                     isDrawerOpen = false

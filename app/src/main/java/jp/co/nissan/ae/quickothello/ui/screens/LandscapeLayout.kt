@@ -33,6 +33,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import jp.co.nissan.ae.quickothello.model.BoardSize
 import jp.co.nissan.ae.quickothello.model.Player
 import jp.co.nissan.ae.quickothello.ui.screens.components.DrawerContent
 import jp.co.nissan.ae.quickothello.ui.screens.components.GameBoard
@@ -47,11 +48,12 @@ fun LandscapeLayout(
     uiState: jp.co.nissan.ae.quickothello.viewmodel.OthelloUiState,
     onCellClick: (Int, Int) -> Unit,
     onResetGame: () -> Unit,
+    onBoardSizeSelected: (BoardSize) -> Unit,
     onDismissInvalidMove: () -> Unit
 ) {
     var isDrawerOpen by remember { mutableStateOf(false) }
     val density = LocalDensity.current
-    val drawerHeight = 150.dp
+    val drawerHeight = 180.dp
     val drawerHeightPx = with(density) { drawerHeight.toPx() }
 
     val offsetY by animateFloatAsState(
@@ -168,6 +170,8 @@ fun LandscapeLayout(
                 }
         ) {
             DrawerContent(
+                selectedBoardSize = uiState.selectedBoardSize,
+                onBoardSizeSelected = onBoardSizeSelected,
                 onResetGame = {
                     onResetGame()
                     isDrawerOpen = false

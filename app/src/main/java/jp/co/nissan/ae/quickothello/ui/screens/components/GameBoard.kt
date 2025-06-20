@@ -24,7 +24,8 @@ fun GameBoard(
     boardSize: androidx.compose.ui.unit.Dp
 ) {
     val boardColor = Color(0xFF2E7D32) // Green board color
-    val cellSize = (boardSize - 16.dp) / 8
+    val size = game.boardSize.size
+    val cellSize = (boardSize - 16.dp) / size
 
     Card(
         modifier = Modifier.size(boardSize),
@@ -38,11 +39,11 @@ fun GameBoard(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            for (row in 0..7) {
+            for (row in 0 until size) {
                 Row(
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    for (col in 0..7) {
+                    for (col in 0 until size) {
                         BoardCell(
                             cellState = game.board[row][col],
                             isValidMove = validMoves.any { it.row == row && it.col == col },
