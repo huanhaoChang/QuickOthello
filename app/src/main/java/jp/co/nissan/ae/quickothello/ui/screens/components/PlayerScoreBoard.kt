@@ -1,5 +1,10 @@
 package jp.co.nissan.ae.quickothello.ui.screens.components
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -18,13 +23,16 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import jp.co.nissan.ae.quickothello.model.GameMode
 import jp.co.nissan.ae.quickothello.model.Player
 
 @Composable
@@ -33,8 +41,28 @@ fun PlayerScoreBoard(
     score: Int,
     isCurrentPlayer: Boolean,
     isHorizontal: Boolean,
+    gameMode: GameMode,
+    isComputerThinking: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    val playerLabel = when {
+        player == Player.BLACK -> "Black"
+        player == Player.WHITE && gameMode == GameMode.HUMAN_VS_COMPUTER -> "White (AI)"
+        else -> "White"
+    }
+
+    // Animation for thinking indicator
+    val infiniteTransition = rememberInfiniteTransition(label = "thinking_animation")
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.3f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(600),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "thinking_alpha"
+    )
+
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(
@@ -58,7 +86,7 @@ fun PlayerScoreBoard(
             ) {
                 // Player label
                 Text(
-                    text = if (player == Player.BLACK) "Black" else "White",
+                    text = playerLabel,
                     fontSize = 18.sp,
                     fontWeight = if (isCurrentPlayer) FontWeight.Bold else FontWeight.Normal,
                     color = if (isCurrentPlayer)
@@ -99,11 +127,18 @@ fun PlayerScoreBoard(
                 // Current turn indicator
                 if (isCurrentPlayer) {
                     Spacer(modifier = Modifier.width(24.dp))
+                    val text = when {
+                        isComputerThinking && player == Player.WHITE -> "Thinking..."
+                        player == Player.WHITE && gameMode == GameMode.HUMAN_VS_COMPUTER -> "AI's Turn"
+                        else -> "Your Turn"
+                    }
                     Text(
-                        text = "Your Turn",
+                        text = text,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
+                        modifier = if (isComputerThinking && player == Player.WHITE)
+                            Modifier.alpha(alpha) else Modifier
                     )
                 }
             }
@@ -118,7 +153,7 @@ fun PlayerScoreBoard(
             ) {
                 // Player label
                 Text(
-                    text = if (player == Player.BLACK) "Black" else "White",
+                    text = playerLabel,
                     fontSize = 20.sp,
                     fontWeight = if (isCurrentPlayer) FontWeight.Bold else FontWeight.Normal,
                     color = if (isCurrentPlayer)
@@ -159,11 +194,18 @@ fun PlayerScoreBoard(
                 // Current turn indicator
                 if (isCurrentPlayer) {
                     Spacer(modifier = Modifier.height(8.dp))
+                    val text = when {
+                        isComputerThinking && player == Player.WHITE -> "Thinking..."
+                        player == Player.WHITE && gameMode == GameMode.HUMAN_VS_COMPUTER -> "AI's Turn"
+                        else -> "Your Turn"
+                    }
                     Text(
-                        text = "Your Turn",
+                        text = text,
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
+                        modifier = if (isComputerThinking && player == Player.WHITE)
+                            Modifier.alpha(alpha) else Modifier
                     )
                 }
             }

@@ -32,6 +32,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import jp.co.nissan.ae.quickothello.model.BoardSize
+import jp.co.nissan.ae.quickothello.model.GameMode
 import jp.co.nissan.ae.quickothello.model.Player
 import jp.co.nissan.ae.quickothello.ui.screens.components.DrawerContent
 import jp.co.nissan.ae.quickothello.ui.screens.components.GameBoard
@@ -47,6 +48,7 @@ fun PortraitLayout(
     onCellClick: (Int, Int) -> Unit,
     onResetGame: () -> Unit,
     onBoardSizeSelected: (BoardSize) -> Unit,
+    onGameModeSelected: (GameMode) -> Unit,
     onDismissInvalidMove: () -> Unit
 ) {
     var isDrawerOpen by remember { mutableStateOf(false) }
@@ -92,6 +94,8 @@ fun PortraitLayout(
                 score = uiState.game.blackScore,
                 isCurrentPlayer = uiState.game.currentPlayer == Player.BLACK && uiState.game.gameState == jp.co.nissan.ae.quickothello.model.GameState.ONGOING,
                 isHorizontal = true,
+                gameMode = uiState.gameMode,
+                isComputerThinking = uiState.isComputerThinking,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
@@ -122,6 +126,8 @@ fun PortraitLayout(
                 score = uiState.game.whiteScore,
                 isCurrentPlayer = uiState.game.currentPlayer == Player.WHITE && uiState.game.gameState == jp.co.nissan.ae.quickothello.model.GameState.ONGOING,
                 isHorizontal = true,
+                gameMode = uiState.gameMode,
+                isComputerThinking = uiState.isComputerThinking,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
@@ -166,7 +172,9 @@ fun PortraitLayout(
         ) {
             DrawerContent(
                 selectedBoardSize = uiState.selectedBoardSize,
+                selectedGameMode = uiState.gameMode,
                 onBoardSizeSelected = onBoardSizeSelected,
+                onGameModeSelected = onGameModeSelected,
                 onResetGame = {
                     onResetGame()
                     isDrawerOpen = false
