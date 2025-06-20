@@ -33,10 +33,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import jp.co.nissan.ae.quickothello.model.Player
 import jp.co.nissan.ae.quickothello.ui.screens.components.DrawerContent
 import jp.co.nissan.ae.quickothello.ui.screens.components.GameBoard
+import jp.co.nissan.ae.quickothello.ui.screens.components.GameStatusMessage
 import jp.co.nissan.ae.quickothello.ui.screens.components.InvalidMoveDialog
-import jp.co.nissan.ae.quickothello.ui.screens.components.ScoreBoard
+import jp.co.nissan.ae.quickothello.ui.screens.components.PlayerScoreBoard
 import kotlin.math.roundToInt
 
 @Composable
@@ -60,56 +62,80 @@ fun LandscapeLayout(
 
     Box(modifier = modifier.fillMaxSize()) {
         // Main Content
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            // Left side - Game Board
-            BoxWithConstraints(
-                modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.Center
+            // Menu Icon
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                IconButton(
+                    onClick = { isDrawerOpen = !isDrawerOpen },
+                    modifier = Modifier.align(Alignment.CenterStart)
                 ) {
-                    // Menu Icon
-                    IconButton(
-                        onClick = { isDrawerOpen = !isDrawerOpen },
-                        modifier = Modifier.align(Alignment.Start)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "Menu",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
 
-                    val boardSize = minOf(this@BoxWithConstraints.maxWidth, this@BoxWithConstraints.maxHeight - 80.dp, 500.dp)
-                    GameBoard(
-                        game = uiState.game,
-                        validMoves = uiState.validMoves,
-                        onCellClick = onCellClick,
-                        boardSize = boardSize
+                // Game Status (if game is over) - positioned at top center in landscape
+                if (uiState.game.gameState != jp.co.nissan.ae.quickothello.model.GameState.ONGOING) {
+                    GameStatusMessage(
+                        gameState = uiState.game.gameState,
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
             }
 
-            // Right side - Score Board
-            Column(
+            Row(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                ScoreBoard(
-                    blackScore = uiState.game.blackScore,
-                    whiteScore = uiState.game.whiteScore,
-                    currentPlayer = uiState.game.currentPlayer,
-                    gameState = uiState.game.gameState,
-                    isLandscape = true
+                // Black Player Score (Left)
+                PlayerScoreBoard(
+                    player = Player.BLACK,
+                    score = uiState.game.blackScore,
+                    isCurrentPlayer = uiState.game.currentPlayer == Player.BLACK && uiState.game.gameState == jp.co.nissan.ae.quickothello.model.GameState.ONGOING,
+                    isHorizontal = false,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                )
+
+                // Game Board (Center)
+                Box(
+                    modifier = Modifier
+                        .weight(2f)
+                        .fillMaxHeight(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    BoxWithConstraints {
+                        val boardSize = minOf(maxWidth - 16.dp, maxHeight - 16.dp, 500.dp)
+                        GameBoard(
+                            game = uiState.game,
+                            validMoves = uiState.validMoves,
+                            onCellClick = onCellClick,
+                            boardSize = boardSize
+                        )
+                    }
+                }
+
+                // White Player Score (Right)
+                PlayerScoreBoard(
+                    player = Player.WHITE,
+                    score = uiState.game.whiteScore,
+                    isCurrentPlayer = uiState.game.currentPlayer == Player.WHITE && uiState.game.gameState == jp.co.nissan.ae.quickothello.model.GameState.ONGOING,
+                    isHorizontal = false,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
                 )
             }
         }

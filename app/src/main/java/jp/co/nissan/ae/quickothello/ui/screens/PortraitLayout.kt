@@ -8,10 +8,9 @@ import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -32,10 +31,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import jp.co.nissan.ae.quickothello.model.Player
 import jp.co.nissan.ae.quickothello.ui.screens.components.DrawerContent
 import jp.co.nissan.ae.quickothello.ui.screens.components.GameBoard
+import jp.co.nissan.ae.quickothello.ui.screens.components.GameStatusMessage
 import jp.co.nissan.ae.quickothello.ui.screens.components.InvalidMoveDialog
-import jp.co.nissan.ae.quickothello.ui.screens.components.ScoreBoard
+import jp.co.nissan.ae.quickothello.ui.screens.components.PlayerScoreBoard
 import kotlin.math.roundToInt
 
 @Composable
@@ -62,40 +63,74 @@ fun PortraitLayout(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Menu Icon
-            IconButton(
-                onClick = { isDrawerOpen = !isDrawerOpen },
-                modifier = Modifier.align(Alignment.Start)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "Menu",
-                    tint = MaterialTheme.colorScheme.primary
-                )
+                IconButton(
+                    onClick = { isDrawerOpen = !isDrawerOpen },
+                    modifier = Modifier.align(Alignment.CenterStart)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "Menu",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
 
-            // Score Board
-            ScoreBoard(
-                blackScore = uiState.game.blackScore,
-                whiteScore = uiState.game.whiteScore,
-                currentPlayer = uiState.game.currentPlayer,
-                gameState = uiState.game.gameState,
-                isLandscape = false
+            // Black Player Score (Top)
+            PlayerScoreBoard(
+                player = Player.BLACK,
+                score = uiState.game.blackScore,
+                isCurrentPlayer = uiState.game.currentPlayer == Player.BLACK && uiState.game.gameState == jp.co.nissan.ae.quickothello.model.GameState.ONGOING,
+                isHorizontal = true,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            // Game Board (Center)
+            Box(
+                modifier = Modifier
+                    .weight(2f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                BoxWithConstraints {
+                    val boardSize = minOf(maxWidth - 32.dp, maxHeight - 32.dp, 400.dp)
+                    GameBoard(
+                        game = uiState.game,
+                        validMoves = uiState.validMoves,
+                        onCellClick = onCellClick,
+                        boardSize = boardSize
+                    )
+                }
+            }
 
-            // Game Board
-            BoxWithConstraints {
-                val boardSize = minOf(maxWidth - 32.dp, 400.dp)
-                GameBoard(
-                    game = uiState.game,
-                    validMoves = uiState.validMoves,
-                    onCellClick = onCellClick,
-                    boardSize = boardSize
+            // White Player Score (Bottom)
+            PlayerScoreBoard(
+                player = Player.WHITE,
+                score = uiState.game.whiteScore,
+                isCurrentPlayer = uiState.game.currentPlayer == Player.WHITE && uiState.game.gameState == jp.co.nissan.ae.quickothello.model.GameState.ONGOING,
+                isHorizontal = true,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+
+            // Game Status (if game is over)
+            if (uiState.game.gameState != jp.co.nissan.ae.quickothello.model.GameState.ONGOING) {
+                GameStatusMessage(
+                    gameState = uiState.game.gameState,
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
             }
         }

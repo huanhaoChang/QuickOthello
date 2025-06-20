@@ -41,6 +41,7 @@ class OthelloViewModel : ViewModel() {
     }
 
     fun resetGame() {
+        Log.d("OthelloViewModel", "Resetting game")
         _uiState.value = OthelloUiState()
         updateValidMoves()
     }

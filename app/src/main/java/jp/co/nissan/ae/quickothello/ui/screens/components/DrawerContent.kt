@@ -37,7 +37,7 @@ fun DrawerContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Othello",
+                text = "Quick Othello",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
@@ -49,18 +49,6 @@ fun DrawerContent(
             ) {
                 Text("New Game")
             }
-
-            // Drag handle
-            Box(
-                modifier = Modifier
-                    .width(60.dp)
-                    .height(4.dp)
-                    .background(
-                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                        RoundedCornerShape(2.dp)
-                    )
-                    .align(Alignment.Bottom)
-            )
         }
     } else {
         // Vertical layout for portrait drawer
@@ -74,7 +62,7 @@ fun DrawerContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "Othello",
+                text = "Quick Othello",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -89,20 +77,6 @@ fun DrawerContent(
             ) {
                 Text("New Game")
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // Drag handle
-            Box(
-                modifier = Modifier
-                    .width(4.dp)
-                    .height(60.dp)
-                    .background(
-                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                        RoundedCornerShape(2.dp)
-                    )
-                    .align(Alignment.End)
-            )
         }
     }
 }
