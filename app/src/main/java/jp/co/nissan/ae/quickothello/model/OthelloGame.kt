@@ -1,18 +1,29 @@
 package jp.co.nissan.ae.quickothello.model
 
 data class OthelloGame(
-    val board: Array<Array<CellState>> = Array(8) { Array(8) { CellState.EMPTY } },
+    val board: Array<Array<CellState>>,
     val currentPlayer: Player = Player.BLACK,
     val gameState: GameState = GameState.ONGOING,
     val blackScore: Int = 2,
     val whiteScore: Int = 2
 ) {
-    init {
-        // Set initial board position
-        board[3][3] = CellState.WHITE
-        board[3][4] = CellState.BLACK
-        board[4][3] = CellState.BLACK
-        board[4][4] = CellState.WHITE
+    companion object {
+        fun createInitialGame(): OthelloGame {
+            val board = Array(8) { Array(8) { CellState.EMPTY } }
+            // Set initial board position
+            board[3][3] = CellState.WHITE
+            board[3][4] = CellState.BLACK
+            board[4][3] = CellState.BLACK
+            board[4][4] = CellState.WHITE
+
+            return OthelloGame(
+                board = board,
+                currentPlayer = Player.BLACK,
+                gameState = GameState.ONGOING,
+                blackScore = 2,
+                whiteScore = 2
+            )
+        }
     }
 
     fun copy(): OthelloGame {

@@ -22,7 +22,9 @@ class MainActivity : ComponentActivity() {
             QuickOthelloTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     OthelloGameScreen(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
                     )
                 }
             }

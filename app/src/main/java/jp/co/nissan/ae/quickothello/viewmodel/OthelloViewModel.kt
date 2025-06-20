@@ -1,5 +1,6 @@
 package jp.co.nissan.ae.quickothello.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import jp.co.nissan.ae.quickothello.model.*
@@ -19,11 +20,13 @@ class OthelloViewModel : ViewModel() {
     }
 
     fun onCellClick(row: Int, col: Int) {
+        Log.d("OthelloViewModel", "Cell clicked at ($row, $col)")
         viewModelScope.launch {
             val currentState = _uiState.value
             if (currentState.game.gameState != GameState.ONGOING) return@launch
 
             gameLogic.makeMove(currentState.game, row, col)?.let { newGame ->
+                Log.d("OthelloViewModel", "Move successful, updating game state")
                 _uiState.value = currentState.copy(
                     game = newGame,
                     showInvalidMoveMessage = false
@@ -31,6 +34,7 @@ class OthelloViewModel : ViewModel() {
                 updateValidMoves()
             } ?: run {
                 // Invalid move
+                Log.d("OthelloViewModel", "Invalid move attempted")
                 _uiState.value = currentState.copy(showInvalidMoveMessage = true)
             }
         }
@@ -48,12 +52,13 @@ class OthelloViewModel : ViewModel() {
     private fun updateValidMoves() {
         val currentGame = _uiState.value.game
         val validMoves = gameLogic.getValidMoves(currentGame, currentGame.currentPlayer)
+        Log.d("OthelloViewModel", "Valid moves count: ${validMoves.size}")
         _uiState.value = _uiState.value.copy(validMoves = validMoves)
     }
 }
 
 data class OthelloUiState(
-    val game: OthelloGame = OthelloGame(),
+    val game: OthelloGame = OthelloGame.createInitialGame(),
     val validMoves: List<Position> = emptyList(),
     val showInvalidMoveMessage: Boolean = false
 )
