@@ -135,6 +135,15 @@ fun PortraitLayout(
             }
         }
 
+        // Overlay to close drawer
+        if (isDrawerOpen) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable { isDrawerOpen = false }
+            )
+        }
+
         // Horizontal Drawer (slides from left)
         Box(
             modifier = Modifier
@@ -159,15 +168,6 @@ fun PortraitLayout(
                     isDrawerOpen = false
                 },
                 isVertical = false
-            )
-        }
-
-        // Overlay to close drawer
-        if (isDrawerOpen) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable { isDrawerOpen = false }
             )
         }
 

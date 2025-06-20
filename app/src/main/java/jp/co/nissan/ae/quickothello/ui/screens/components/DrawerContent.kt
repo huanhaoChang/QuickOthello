@@ -57,10 +57,8 @@ fun DrawerContent(
                 .fillMaxSize()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Spacer(modifier = Modifier.height(32.dp))
-
             Text(
                 text = "Quick Othello",
                 style = MaterialTheme.typography.headlineLarge,
@@ -68,8 +66,6 @@ fun DrawerContent(
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
             )
-
-            Spacer(modifier = Modifier.weight(1f))
 
             Button(
                 onClick = onResetGame,

@@ -140,6 +140,15 @@ fun LandscapeLayout(
             }
         }
 
+        // Overlay to close drawer
+        if (isDrawerOpen) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable { isDrawerOpen = false }
+            )
+        }
+
         // Vertical Drawer (slides from top)
         Box(
             modifier = Modifier
@@ -164,15 +173,6 @@ fun LandscapeLayout(
                     isDrawerOpen = false
                 },
                 isVertical = true
-            )
-        }
-
-        // Overlay to close drawer
-        if (isDrawerOpen) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable { isDrawerOpen = false }
             )
         }
 
