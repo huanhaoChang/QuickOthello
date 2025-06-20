@@ -1,0 +1,59 @@
+package jp.co.nissan.ae.quickothello.viewmodel
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import jp.co.nissan.ae.quickothello.model.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+class OthelloViewModel : ViewModel() {
+    private val gameLogic = OthelloGameLogic()
+
+    private val _uiState = MutableStateFlow(OthelloUiState())
+    val uiState: StateFlow<OthelloUiState> = _uiState.asStateFlow()
+
+    init {
+        updateValidMoves()
+    }
+
+    fun onCellClick(row: Int, col: Int) {
+        viewModelScope.launch {
+            val currentState = _uiState.value
+            if (currentState.game.gameState != GameState.ONGOING) return@launch
+
+            gameLogic.makeMove(currentState.game, row, col)?.let { newGame ->
+                _uiState.value = currentState.copy(
+                    game = newGame,
+                    showInvalidMoveMessage = false
+                )
+                updateValidMoves()
+            } ?: run {
+                // Invalid move
+                _uiState.value = currentState.copy(showInvalidMoveMessage = true)
+            }
+        }
+    }
+
+    fun resetGame() {
+        _uiState.value = OthelloUiState()
+        updateValidMoves()
+    }
+
+    fun dismissInvalidMoveMessage() {
+        _uiState.value = _uiState.value.copy(showInvalidMoveMessage = false)
+    }
+
+    private fun updateValidMoves() {
+        val currentGame = _uiState.value.game
+        val validMoves = gameLogic.getValidMoves(currentGame, currentGame.currentPlayer)
+        _uiState.value = _uiState.value.copy(validMoves = validMoves)
+    }
+}
+
+data class OthelloUiState(
+    val game: OthelloGame = OthelloGame(),
+    val validMoves: List<Position> = emptyList(),
+    val showInvalidMoveMessage: Boolean = false
+)

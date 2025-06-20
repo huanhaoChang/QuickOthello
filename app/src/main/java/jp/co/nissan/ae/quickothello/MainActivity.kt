@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import jp.co.nissan.ae.quickothello.ui.screens.OthelloGameScreen
 import jp.co.nissan.ae.quickothello.ui.theme.QuickOthelloTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,9 +21,19 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuickOthelloTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
+                    OthelloGameScreen(
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    QuickOthelloTheme {
+        OthelloGameScreen()
     }
 }
