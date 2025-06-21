@@ -25,7 +25,8 @@ fun OthelloGameScreen(
             onResetGame = { viewModel.resetGame(uiState.selectedBoardSize, uiState.gameMode) },
             onBoardSizeSelected = viewModel::updateBoardSize,
             onGameModeSelected = viewModel::updateGameMode,
-            onDismissInvalidMove = viewModel::dismissInvalidMoveMessage
+            onDismissInvalidMove = viewModel::dismissInvalidMoveMessage,
+            onDismissGameOver = viewModel::dismissGameOverDialog
         )
     } else {
         PortraitLayout(
@@ -35,7 +36,8 @@ fun OthelloGameScreen(
             onResetGame = { viewModel.resetGame(uiState.selectedBoardSize, uiState.gameMode) },
             onBoardSizeSelected = viewModel::updateBoardSize,
             onGameModeSelected = viewModel::updateGameMode,
-            onDismissInvalidMove = viewModel::dismissInvalidMoveMessage
+            onDismissInvalidMove = viewModel::dismissInvalidMoveMessage,
+            onDismissGameOver = viewModel::dismissGameOverDialog
         )
     }
 }

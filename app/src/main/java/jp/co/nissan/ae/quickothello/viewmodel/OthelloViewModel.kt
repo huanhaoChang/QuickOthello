@@ -55,9 +55,11 @@ class OthelloViewModel @Inject constructor(
             )) {
                 is MakeMoveUseCase.Result.Success -> {
                     Log.d("OthelloViewModel", "Move successful, updating game state")
+                    val showDialog = result.newGame.gameState != GameState.ONGOING
                     _uiState.value = currentState.copy(
                         game = result.newGame,
-                        showInvalidMoveMessage = false
+                        showInvalidMoveMessage = false,
+                        showGameOverDialog = showDialog
                     )
                     updateValidMoves()
 
@@ -91,10 +93,12 @@ class OthelloViewModel @Inject constructor(
 
             if (newGame != null) {
                 Log.d("OthelloViewModel", "Computer made a move")
+                val showDialog = newGame.gameState != GameState.ONGOING
                 _uiState.value = currentState.copy(
                     game = newGame,
                     showInvalidMoveMessage = false,
-                    isComputerThinking = false
+                    isComputerThinking = false,
+                    showGameOverDialog = showDialog
                 )
                 updateValidMoves()
             } else {
@@ -132,6 +136,10 @@ class OthelloViewModel @Inject constructor(
 
     fun dismissInvalidMoveMessage() {
         _uiState.value = _uiState.value.copy(showInvalidMoveMessage = false)
+    }
+
+    fun dismissGameOverDialog() {
+        _uiState.value = _uiState.value.copy(showGameOverDialog = false)
     }
 
     private fun updateValidMoves() {

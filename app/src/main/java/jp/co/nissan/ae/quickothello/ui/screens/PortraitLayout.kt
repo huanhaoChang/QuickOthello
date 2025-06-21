@@ -51,7 +51,8 @@ fun PortraitLayout(
     onResetGame: () -> Unit,
     onBoardSizeSelected: (BoardSize) -> Unit,
     onGameModeSelected: (GameMode) -> Unit,
-    onDismissInvalidMove: () -> Unit
+    onDismissInvalidMove: () -> Unit,
+    onDismissGameOver: () -> Unit
 ) {
     var isDrawerOpen by remember { mutableStateOf(false) }
     val density = LocalDensity.current
@@ -135,14 +136,6 @@ fun PortraitLayout(
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             )
-
-            // Game Status (if game is over)
-            if (uiState.game.gameState != GameState.ONGOING) {
-                GameStatusMessage(
-                    gameState = uiState.game.gameState,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-            }
         }
 
         // Overlay to close drawer
@@ -188,6 +181,17 @@ fun PortraitLayout(
         // Invalid Move Message
         if (uiState.showInvalidMoveMessage) {
             InvalidMoveDialog(onDismiss = onDismissInvalidMove)
+        }
+
+        // Game Over Dialog
+        if (uiState.showGameOverDialog) {
+            GameStatusMessage(
+                gameState = uiState.game.gameState,
+                blackScore = uiState.game.blackScore,
+                whiteScore = uiState.game.whiteScore,
+                onNewGame = onResetGame,
+                onDismiss = onDismissGameOver
+            )
         }
     }
 }

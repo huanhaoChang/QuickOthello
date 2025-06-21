@@ -53,7 +53,8 @@ fun LandscapeLayout(
     onResetGame: () -> Unit,
     onBoardSizeSelected: (BoardSize) -> Unit,
     onGameModeSelected: (GameMode) -> Unit,
-    onDismissInvalidMove: () -> Unit
+    onDismissInvalidMove: () -> Unit,
+    onDismissGameOver: () -> Unit
 ) {
     var isDrawerOpen by remember { mutableStateOf(false) }
     val density = LocalDensity.current
@@ -85,14 +86,6 @@ fun LandscapeLayout(
                         imageVector = Icons.Default.Menu,
                         contentDescription = "Menu",
                         tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-
-                // Game Status (if game is over) - positioned at top center in landscape
-                if (uiState.game.gameState != GameState.ONGOING) {
-                    GameStatusMessage(
-                        gameState = uiState.game.gameState,
-                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
             }
@@ -193,6 +186,17 @@ fun LandscapeLayout(
         // Invalid Move Message
         if (uiState.showInvalidMoveMessage) {
             InvalidMoveDialog(onDismiss = onDismissInvalidMove)
+        }
+
+        // Game Over Dialog
+        if (uiState.showGameOverDialog) {
+            GameStatusMessage(
+                gameState = uiState.game.gameState,
+                blackScore = uiState.game.blackScore,
+                whiteScore = uiState.game.whiteScore,
+                onNewGame = onResetGame,
+                onDismiss = onDismissGameOver
+            )
         }
     }
 }
