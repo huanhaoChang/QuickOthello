@@ -5,13 +5,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import jp.co.nissan.ae.quickothello.viewmodel.OthelloViewModel
 
 @Composable
 fun OthelloGameScreen(
     modifier: Modifier = Modifier,
-    viewModel: OthelloViewModel = viewModel()
+    viewModel: OthelloViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val configuration = LocalConfiguration.current

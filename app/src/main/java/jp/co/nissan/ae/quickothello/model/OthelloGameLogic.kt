@@ -1,13 +1,13 @@
 package jp.co.nissan.ae.quickothello.model
 
-class OthelloGameLogic {
+class OthelloGameLogic: GameLogic {
     private val directions = listOf(
         Position(-1, -1), Position(-1, 0), Position(-1, 1),
         Position(0, -1),                    Position(0, 1),
         Position(1, -1),  Position(1, 0),  Position(1, 1)
     )
 
-    fun makeMove(game: OthelloGame, row: Int, col: Int): OthelloGame? {
+    override fun makeMove(game: OthelloGame, row: Int, col: Int): OthelloGame? {
         if (!isValidMove(game, row, col, game.currentPlayer)) {
             return null
         }
@@ -62,7 +62,7 @@ class OthelloGameLogic {
         }
     }
 
-    fun isValidMove(game: OthelloGame, row: Int, col: Int, player: Player): Boolean {
+    override fun isValidMove(game: OthelloGame, row: Int, col: Int, player: Player): Boolean {
         val size = game.boardSize.size
         if (row !in 0 until size || col !in 0 until size) return false
         if (game.board[row][col] != CellState.EMPTY) return false
@@ -71,7 +71,7 @@ class OthelloGameLogic {
         return getCellsToFlip(game, row, col, player).isNotEmpty()
     }
 
-    fun getValidMoves(game: OthelloGame, player: Player): List<Position> {
+    override fun getValidMoves(game: OthelloGame, player: Player): List<Position> {
         val validMoves = mutableListOf<Position>()
         val size = game.boardSize.size
         for (row in 0 until size) {
