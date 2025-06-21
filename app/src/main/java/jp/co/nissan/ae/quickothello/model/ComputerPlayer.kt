@@ -6,7 +6,7 @@ import kotlinx.coroutines.withContext
 class ComputerPlayer(private val gameLogic: OthelloGameLogic) {
 
     companion object {
-        private const val MAX_DEPTH = 5
+        private const val MAX_DEPTH = 3
         private const val CORNER_WEIGHT = 100
         private const val EDGE_WEIGHT = 10
         private const val MOBILITY_WEIGHT = 5

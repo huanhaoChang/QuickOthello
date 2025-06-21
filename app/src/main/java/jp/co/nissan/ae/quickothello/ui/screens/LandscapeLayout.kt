@@ -35,18 +35,20 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import jp.co.nissan.ae.quickothello.model.BoardSize
 import jp.co.nissan.ae.quickothello.model.GameMode
+import jp.co.nissan.ae.quickothello.model.GameState
 import jp.co.nissan.ae.quickothello.model.Player
 import jp.co.nissan.ae.quickothello.ui.screens.components.DrawerContent
 import jp.co.nissan.ae.quickothello.ui.screens.components.GameBoard
 import jp.co.nissan.ae.quickothello.ui.screens.components.GameStatusMessage
 import jp.co.nissan.ae.quickothello.ui.screens.components.InvalidMoveDialog
 import jp.co.nissan.ae.quickothello.ui.screens.components.PlayerScoreBoard
+import jp.co.nissan.ae.quickothello.viewmodel.OthelloUiState
 import kotlin.math.roundToInt
 
 @Composable
 fun LandscapeLayout(
     modifier: Modifier,
-    uiState: jp.co.nissan.ae.quickothello.viewmodel.OthelloUiState,
+    uiState: OthelloUiState,
     onCellClick: (Int, Int) -> Unit,
     onResetGame: () -> Unit,
     onBoardSizeSelected: (BoardSize) -> Unit,
@@ -87,7 +89,7 @@ fun LandscapeLayout(
                 }
 
                 // Game Status (if game is over) - positioned at top center in landscape
-                if (uiState.game.gameState != jp.co.nissan.ae.quickothello.model.GameState.ONGOING) {
+                if (uiState.game.gameState != GameState.ONGOING) {
                     GameStatusMessage(
                         gameState = uiState.game.gameState,
                         modifier = Modifier.align(Alignment.Center)
@@ -106,7 +108,7 @@ fun LandscapeLayout(
                 PlayerScoreBoard(
                     player = Player.BLACK,
                     score = uiState.game.blackScore,
-                    isCurrentPlayer = uiState.game.currentPlayer == Player.BLACK && uiState.game.gameState == jp.co.nissan.ae.quickothello.model.GameState.ONGOING,
+                    isCurrentPlayer = uiState.game.currentPlayer == Player.BLACK && uiState.game.gameState == GameState.ONGOING,
                     isHorizontal = false,
                     gameMode = uiState.gameMode,
                     isComputerThinking = uiState.isComputerThinking,
@@ -137,7 +139,7 @@ fun LandscapeLayout(
                 PlayerScoreBoard(
                     player = Player.WHITE,
                     score = uiState.game.whiteScore,
-                    isCurrentPlayer = uiState.game.currentPlayer == Player.WHITE && uiState.game.gameState == jp.co.nissan.ae.quickothello.model.GameState.ONGOING,
+                    isCurrentPlayer = uiState.game.currentPlayer == Player.WHITE && uiState.game.gameState == GameState.ONGOING,
                     isHorizontal = false,
                     gameMode = uiState.gameMode,
                     isComputerThinking = uiState.isComputerThinking,

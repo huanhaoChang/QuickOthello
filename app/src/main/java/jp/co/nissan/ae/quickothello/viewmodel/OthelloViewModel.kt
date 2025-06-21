@@ -120,12 +120,3 @@ class OthelloViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(validMoves = validMoves)
     }
 }
-
-data class OthelloUiState(
-    val game: OthelloGame = OthelloGame.createInitialGame(),
-    val validMoves: List<Position> = emptyList(),
-    val showInvalidMoveMessage: Boolean = false,
-    val selectedBoardSize: BoardSize = BoardSize.EIGHT,
-    val gameMode: GameMode = GameMode.HUMAN_VS_HUMAN,
-    val isComputerThinking: Boolean = false
-)
