@@ -26,7 +26,9 @@ fun OthelloGameScreen(
             onBoardSizeSelected = viewModel::updateBoardSize,
             onGameModeSelected = viewModel::updateGameMode,
             onDismissInvalidMove = viewModel::dismissInvalidMoveMessage,
-            onDismissGameOver = viewModel::dismissGameOverDialog
+            onDismissGameOver = viewModel::dismissGameOverDialog,
+            onResumeGame = viewModel::onResumeGame,
+            onNewGameFromResume = viewModel::onNewGameFromResume
         )
     } else {
         PortraitLayout(
@@ -37,7 +39,9 @@ fun OthelloGameScreen(
             onBoardSizeSelected = viewModel::updateBoardSize,
             onGameModeSelected = viewModel::updateGameMode,
             onDismissInvalidMove = viewModel::dismissInvalidMoveMessage,
-            onDismissGameOver = viewModel::dismissGameOverDialog
+            onDismissGameOver = viewModel::dismissGameOverDialog,
+            onResumeGame = viewModel::onResumeGame,
+            onNewGameFromResume = viewModel::onNewGameFromResume
         )
     }
 }

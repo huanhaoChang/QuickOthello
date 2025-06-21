@@ -10,7 +10,9 @@ data class OthelloUiState(
     val validMoves: List<Position> = emptyList(),
     val showInvalidMoveMessage: Boolean = false,
     val showGameOverDialog: Boolean = false,
+    val showResumeDialog: Boolean = false,
     val selectedBoardSize: BoardSize = BoardSize.EIGHT,
     val gameMode: GameMode = GameMode.HUMAN_VS_HUMAN,
-    val isComputerThinking: Boolean = false
+    val isComputerThinking: Boolean = false,
+    val hasGameInProgress: Boolean = false
 )

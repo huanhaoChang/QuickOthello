@@ -40,6 +40,7 @@ import jp.co.nissan.ae.quickothello.ui.screens.components.GameBoard
 import jp.co.nissan.ae.quickothello.ui.screens.components.GameStatusMessage
 import jp.co.nissan.ae.quickothello.ui.screens.components.InvalidMoveDialog
 import jp.co.nissan.ae.quickothello.ui.screens.components.PlayerScoreBoard
+import jp.co.nissan.ae.quickothello.ui.screens.components.ResumeGameDialog
 import jp.co.nissan.ae.quickothello.viewmodel.OthelloUiState
 import kotlin.math.roundToInt
 
@@ -52,7 +53,9 @@ fun PortraitLayout(
     onBoardSizeSelected: (BoardSize) -> Unit,
     onGameModeSelected: (GameMode) -> Unit,
     onDismissInvalidMove: () -> Unit,
-    onDismissGameOver: () -> Unit
+    onDismissGameOver: () -> Unit,
+    onResumeGame: () -> Unit,
+    onNewGameFromResume: () -> Unit
 ) {
     var isDrawerOpen by remember { mutableStateOf(false) }
     val density = LocalDensity.current
@@ -191,6 +194,14 @@ fun PortraitLayout(
                 whiteScore = uiState.game.whiteScore,
                 onNewGame = onResetGame,
                 onDismiss = onDismissGameOver
+            )
+        }
+
+        // Resume Game Dialog
+        if (uiState.showResumeDialog) {
+            ResumeGameDialog(
+                onResumeGame = onResumeGame,
+                onNewGame = onNewGameFromResume
             )
         }
     }

@@ -28,6 +28,8 @@ class OthelloViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(OthelloUiState())
     val uiState: StateFlow<OthelloUiState> = _uiState.asStateFlow()
 
+    private var isFirstResume = true
+
     init {
         // Load saved preferences
         val savedBoardSize = preferencesRepository.getSavedBoardSize()
@@ -98,7 +100,8 @@ class OthelloViewModel @Inject constructor(
                     game = newGame,
                     showInvalidMoveMessage = false,
                     isComputerThinking = false,
-                    showGameOverDialog = showDialog
+                    showGameOverDialog = showDialog,
+                    hasGameInProgress = newGame.gameState == GameState.ONGOING
                 )
                 updateValidMoves()
             } else {
@@ -117,7 +120,8 @@ class OthelloViewModel @Inject constructor(
             game = gameRepository.createNewGame(newBoardSize),
             selectedBoardSize = newBoardSize,
             gameMode = newGameMode,
-            isComputerThinking = false
+            isComputerThinking = false,
+            hasGameInProgress = true
         )
         updateValidMoves()
     }
@@ -140,6 +144,41 @@ class OthelloViewModel @Inject constructor(
 
     fun dismissGameOverDialog() {
         _uiState.value = _uiState.value.copy(showGameOverDialog = false)
+    }
+
+    fun onAppPaused() {
+        Log.d("OthelloViewModel", "App paused")
+        // Set flag to indicate app has been used
+        isFirstResume = false
+    }
+
+    fun onAppResumed() {
+        Log.d("OthelloViewModel", "App resumed, isFirstResume: $isFirstResume")
+        if (isFirstResume) {
+            // Skip showing dialog on first resume (app start)
+            isFirstResume = false
+        } else {
+            val currentState = _uiState.value
+            // Show resume dialog only if there's a game in progress and it's not game over
+            if (currentState.hasGameInProgress && currentState.game.gameState == GameState.ONGOING) {
+                // Check if the game has actually progressed (not just initial state)
+                val isGameProgressed = currentState.game.blackScore > 2 || currentState.game.whiteScore > 2
+                if (isGameProgressed) {
+                    _uiState.value = currentState.copy(showResumeDialog = true)
+                }
+            }
+        }
+    }
+
+    fun onResumeGame() {
+        Log.d("OthelloViewModel", "Resuming game")
+        _uiState.value = _uiState.value.copy(showResumeDialog = false)
+    }
+
+    fun onNewGameFromResume() {
+        Log.d("OthelloViewModel", "Starting new game from resume dialog")
+        _uiState.value = _uiState.value.copy(showResumeDialog = false)
+        resetGame()
     }
 
     private fun updateValidMoves() {
