@@ -1,6 +1,5 @@
 package jp.co.nissan.ae.quickothello.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,7 +44,6 @@ class OthelloViewModel @Inject constructor(
     }
 
     fun onCellClick(row: Int, col: Int) {
-        Log.d("OthelloViewModel", "Cell clicked at ($row, $col)")
         viewModelScope.launch {
             val currentState = _uiState.value
 
@@ -56,7 +54,6 @@ class OthelloViewModel @Inject constructor(
                 gameMode = currentState.gameMode
             )) {
                 is MakeMoveUseCase.Result.Success -> {
-                    Log.d("OthelloViewModel", "Move successful, updating game state")
                     val showDialog = result.newGame.gameState != GameState.ONGOING
                     _uiState.value = currentState.copy(
                         game = result.newGame,
@@ -70,15 +67,10 @@ class OthelloViewModel @Inject constructor(
                     }
                 }
                 MakeMoveUseCase.Result.InvalidMove -> {
-                    Log.d("OthelloViewModel", "Invalid move attempted")
                     _uiState.value = currentState.copy(showInvalidMoveMessage = true)
                 }
-                MakeMoveUseCase.Result.GameNotOngoing -> {
-                    Log.d("OthelloViewModel", "Game is not ongoing")
-                }
-                MakeMoveUseCase.Result.NotPlayerTurn -> {
-                    Log.d("OthelloViewModel", "Not player's turn")
-                }
+                MakeMoveUseCase.Result.GameNotOngoing -> {}
+                MakeMoveUseCase.Result.NotPlayerTurn -> {}
             }
         }
     }
@@ -94,7 +86,6 @@ class OthelloViewModel @Inject constructor(
             val newGame = computerMoveUseCase.execute(currentState.game)
 
             if (newGame != null) {
-                Log.d("OthelloViewModel", "Computer made a move")
                 val showDialog = newGame.gameState != GameState.ONGOING
                 _uiState.value = currentState.copy(
                     game = newGame,
@@ -112,7 +103,6 @@ class OthelloViewModel @Inject constructor(
     }
 
     fun resetGame(boardSize: BoardSize? = null, gameMode: GameMode? = null) {
-        Log.d("OthelloViewModel", "Resetting game with board size: ${boardSize?.displayName() ?: "current"}")
         val newBoardSize = boardSize ?: _uiState.value.selectedBoardSize
         val newGameMode = gameMode ?: _uiState.value.gameMode
 
@@ -127,13 +117,11 @@ class OthelloViewModel @Inject constructor(
     }
 
     fun updateBoardSize(boardSize: BoardSize) {
-        Log.d("OthelloViewModel", "Updating board size to: ${boardSize.displayName()}")
         _uiState.value = _uiState.value.copy(selectedBoardSize = boardSize)
         preferencesRepository.saveBoardSize(boardSize)
     }
 
     fun updateGameMode(gameMode: GameMode) {
-        Log.d("OthelloViewModel", "Updating game mode to: ${gameMode.displayName()}")
         _uiState.value = _uiState.value.copy(gameMode = gameMode)
         preferencesRepository.saveGameMode(gameMode)
     }
@@ -147,13 +135,11 @@ class OthelloViewModel @Inject constructor(
     }
 
     fun onAppPaused() {
-        Log.d("OthelloViewModel", "App paused")
         // Set flag to indicate app has been used
         isFirstResume = false
     }
 
     fun onAppResumed() {
-        Log.d("OthelloViewModel", "App resumed, isFirstResume: $isFirstResume")
         if (isFirstResume) {
             // Skip showing dialog on first resume (app start)
             isFirstResume = false
@@ -171,12 +157,10 @@ class OthelloViewModel @Inject constructor(
     }
 
     fun onResumeGame() {
-        Log.d("OthelloViewModel", "Resuming game")
         _uiState.value = _uiState.value.copy(showResumeDialog = false)
     }
 
     fun onNewGameFromResume() {
-        Log.d("OthelloViewModel", "Starting new game from resume dialog")
         _uiState.value = _uiState.value.copy(showResumeDialog = false)
         resetGame()
     }
@@ -184,7 +168,6 @@ class OthelloViewModel @Inject constructor(
     private fun updateValidMoves() {
         val currentGame = _uiState.value.game
         val validMoves = getValidMovesUseCase.execute(currentGame)
-        Log.d("OthelloViewModel", "Valid moves count: ${validMoves.size}")
         _uiState.value = _uiState.value.copy(validMoves = validMoves)
     }
 }
