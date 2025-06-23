@@ -40,13 +40,13 @@ import jp.co.nissan.ae.quickothello.model.Player
 
 @Composable
 fun PlayerScoreBoard(
+    modifier: Modifier = Modifier,
     player: Player,
     score: Int,
     isCurrentPlayer: Boolean,
     isHorizontal: Boolean,
     gameMode: GameMode,
     isComputerThinking: Boolean = false,
-    modifier: Modifier = Modifier
 ) {
     val playerLabel = when {
         player == Player.BLACK -> "Black"

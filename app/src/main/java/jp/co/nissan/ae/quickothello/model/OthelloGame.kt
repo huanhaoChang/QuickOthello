@@ -14,7 +14,6 @@ data class OthelloGame(
             val board = Array(size) { Array(size) { CellState.EMPTY } }
 
             // Set initial board position based on board size
-            val mid = size / 2
             when (boardSize) {
                 BoardSize.FOUR -> {
                     // For 4x4, place pieces in the center 2x2

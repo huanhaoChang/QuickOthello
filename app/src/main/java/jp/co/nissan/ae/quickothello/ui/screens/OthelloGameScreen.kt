@@ -1,21 +1,21 @@
 package jp.co.nissan.ae.quickothello.ui.screens
 
+import android.content.res.Configuration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.hilt.navigation.compose.hiltViewModel
 import jp.co.nissan.ae.quickothello.viewmodel.OthelloViewModel
 
 @Composable
 fun OthelloGameScreen(
     modifier: Modifier = Modifier,
-    viewModel: OthelloViewModel = hiltViewModel()
+    viewModel: OthelloViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     if (isLandscape) {
         LandscapeLayout(

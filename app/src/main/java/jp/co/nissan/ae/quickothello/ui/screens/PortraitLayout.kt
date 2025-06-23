@@ -96,16 +96,16 @@ fun PortraitLayout(
 
             // Black Player Score (Top)
             PlayerScoreBoard(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
                 player = Player.BLACK,
                 score = uiState.game.blackScore,
                 isCurrentPlayer = uiState.game.currentPlayer == Player.BLACK && uiState.game.gameState == GameState.ONGOING,
                 isHorizontal = true,
                 gameMode = uiState.gameMode,
-                isComputerThinking = uiState.isComputerThinking,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                isComputerThinking = uiState.isComputerThinking
             )
 
             // Game Board (Center)
@@ -128,16 +128,16 @@ fun PortraitLayout(
 
             // White Player Score (Bottom)
             PlayerScoreBoard(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
                 player = Player.WHITE,
                 score = uiState.game.whiteScore,
                 isCurrentPlayer = uiState.game.currentPlayer == Player.WHITE && uiState.game.gameState == GameState.ONGOING,
                 isHorizontal = true,
                 gameMode = uiState.gameMode,
                 isComputerThinking = uiState.isComputerThinking,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
             )
         }
 
